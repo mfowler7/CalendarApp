@@ -1,8 +1,9 @@
 -- Initialize the database.
 -- Drop any existing data and create empty tables.
 
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS post;
+-- DROP TABLE IF EXISTS user;
+-- DROP TABLE IF EXISTS post;
+-- DROP TABLE IF EXISTS task;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,4 +18,13 @@ CREATE TABLE post (
   title TEXT NOT NULL,
   body TEXT NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user (id)
+);
+
+CREATE TABLE task (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES user (id)
 );
