@@ -13,7 +13,7 @@ from flaskr.db import get_db
 bp = Blueprint("task", __name__)
 
 
-@bp.route("/")
+@bp.route("/task")
 def index():
     """Show all the posts, most recent first."""
     db = get_db()
@@ -55,7 +55,7 @@ def get_task(id, check_user=True):
     return task
 
 
-@bp.route("/create", methods=("GET", "POST"))
+@bp.route("/task/create", methods=("GET", "POST"))
 @login_required
 def create():
     """Create a new post for the current user."""
@@ -81,7 +81,7 @@ def create():
     return render_template("task/create.html")
 
 
-@bp.route("/<int:id>/update", methods=("GET", "POST"))
+@bp.route("/task/<int:id>/update", methods=("GET", "POST"))
 @login_required
 def update(id):
     """Update a task if the current user is the task owner."""
@@ -108,7 +108,7 @@ def update(id):
     return render_template("task/update.html", task=task)
 
 
-@bp.route("/<int:id>/delete", methods=("POST",))
+@bp.route("/task/<int:id>/delete", methods=("POST",))
 @login_required
 def delete(id):
     """Delete a task.
