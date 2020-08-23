@@ -13,7 +13,7 @@ from flaskr.db import get_db
 bp = Blueprint("task", __name__)
 
 
-@bp.route("/task")
+@bp.route("/tasks")
 def index():
     """Show all the posts, most recent first."""
     db = get_db()
