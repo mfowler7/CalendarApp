@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Tasks{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <a class="action" href="{{ url_for('blog.index') }}">Posts</a>
+  <a class="action" href="{{ url_for('task.index') }}">Tasks</a>
+{% endblock %} -->
+ 
