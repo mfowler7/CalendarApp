@@ -120,3 +120,11 @@ def delete(id):
     db.execute("DELETE FROM task WHERE id = ?", (id,))
     db.commit()
     return redirect(url_for("task.index"))
+
+@bp.route("/task/<int:id>/details", methods=("GET",))
+@login_required
+def details(id):
+    """ Display all the data associated with the task """
+    task = get_task(id)
+
+    render_template("task.details", task=task)

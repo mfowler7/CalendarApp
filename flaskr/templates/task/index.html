@@ -13,13 +13,13 @@
       <header>
         <div>
           <h1>{{ task['name'] }}</h1>
-          <div class="about">by {{ task['username'] }} on {{ task['created'].strftime('%Y-%m-%d') }}></div>
+          <div class="about">Created on {{ task['created'].strftime('%Y-%m-%d') }}></div>
         </div>
         {% if g.user['id'] == task['user_id'] %}
           <a class="action" href="{{ url_for('task.update', id=task['id']) }}">Edit</a>
+          <a class="action" href="{{ url_for('task.details', id=task['id']) }}">Details</a>
         {% endif %}
       </header>
-      <p class="body">{{ task['description'] }}</p>
     </article>
     {% if not loop.last %}
       <hr>
