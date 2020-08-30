@@ -32,8 +32,9 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # apply the blueprints to the app
-    from flaskr import auth, blog, task
+    from flaskr import auth, blog, task, landing
 
+    app.register_blueprint(landing.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(blog.bp)
     app.register_blueprint(task.bp)
