@@ -129,4 +129,4 @@ def details(id):
     """ Display all the data associated with the task """
     task = get_task(id)
 
-    render_template("task.details", task=task)
+    return render_template("task/details.html", task=task)
