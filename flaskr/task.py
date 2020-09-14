@@ -15,7 +15,7 @@ bp = Blueprint("task", __name__)
 
 @bp.route("/tasks")
 def index():
-    """Show all the posts, most recent first."""
+    """Show all the tasks, most recent first."""
     db = get_db()
     tasks = db.execute(
         "SELECT t.id, name, description, created, user_id, username"
@@ -38,7 +38,7 @@ def get_task(id, check_user=True):
     task = (
         get_db()
         .execute(
-            "SELECT t.id, name, description, created, user_id, username"
+            "SELECT t.id, name, description, created, priority, user_id, username"
             " FROM task t JOIN user u ON t.user_id = u.id"
             " WHERE t.id = ?",
             (id,),
@@ -62,6 +62,7 @@ def create():
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]
+        priority = request.form["priority"]
         error = None
 
         if not name:
@@ -72,8 +73,8 @@ def create():
         else:
             db = get_db()
             db.execute(
-                "INSERT INTO task (name, description, user_id) VALUES (?, ?, ?)",
-                (name, description, g.user["id"]),
+                "INSERT INTO task (name, description, user_id, priority) VALUES (?, ?, ?, ?)",
+                (name, description, g.user["id"], priority),
             )
             db.commit()
             return redirect(url_for("task.index"))
@@ -90,6 +91,7 @@ def update(id):
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]
+        priority = request.form["priority"]
         error = None
 
         if not name:
@@ -100,7 +102,7 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                "UPDATE task SET name = ?, description = ? WHERE id = ?", (name, description, id)
+                "UPDATE task SET name = ?, description = ?, priority = ? WHERE id = ?", (name, description, priority, id)
             )
             db.commit()
             return redirect(url_for("task.index"))
