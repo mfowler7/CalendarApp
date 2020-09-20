@@ -12,7 +12,12 @@
     <label for="description">Description</label>
     <textarea name="description" id="description">{{ request.form['description'] or task['description'] }}</textarea>
     <label for ="priority">Priority</label>
-    <input name="priority" id="priority" required>
+    <input type="radio" name="priority" id="high" value="1">
+    <label for="high">High</label><br>
+    <input type="radio" name="priority" id="medium" value="2">
+    <label for="medium">Medium</label><br>
+    <input type="radio" name="priority" id="low" value="3">
+    <label for="low">Low</label><br>
     <input type="submit" value="Save">
   </form>
   <hr>
