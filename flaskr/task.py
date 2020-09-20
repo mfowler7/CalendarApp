@@ -15,13 +15,22 @@ bp = Blueprint("task", __name__)
 
 @bp.route("/tasks")
 def index():
-    """Show all the tasks, most recent first."""
+    #d = date.today()
+    import datetime
+    today = datetime.datetime.now().strftime("%m-%d-%Y") + " 00:00:00"
+    tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+    tomrrow_formatted = tomorrow.strftime("%m-%d-%Y") + " 11:59:59"
+
+    print(f"Tomorrow: {tomrrow_formatted}")
+
+    """Show all tasks for today"""
     db = get_db()
     tasks = db.execute(
         "SELECT t.id, name, description, created, user_id, username"
         " FROM task t JOIN user u ON t.user_id = u.id"
-        " ORDER BY created DESC"
+        " WHERE created > '{}' AND created < '{}'".format(today, tomorrow)
     ).fetchall()
+
     return render_template("task/index.html", tasks=tasks)
 
 
@@ -77,6 +86,7 @@ def create():
                 (name, description, g.user["id"], priority),
             )
             db.commit()
+            
             return redirect(url_for("task.index"))
 
     return render_template("task/create.html")
@@ -121,6 +131,7 @@ def delete(id):
     db = get_db()
     db.execute("DELETE FROM task WHERE id = ?", (id,))
     db.commit()
+    
     return redirect(url_for("task.index"))
 
 @bp.route("/task/<int:id>/details", methods=("GET",))

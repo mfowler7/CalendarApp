@@ -14,4 +14,7 @@
     <input name="priority" id="priority" required>
     <input type="submit" value="Save">
   </form>
+  <form action="{{ url_for('task.index') }}" method="get">
+    <input class="primary" type="submit" value="Cancel" onclick="return confirm('Are you sure?');">
+  </form>
 {% endblock %}

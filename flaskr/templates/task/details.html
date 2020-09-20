@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Tasks{% endblock %}</h1>
+  <h1>{% block title %}Task Data{% endblock %}</h1>
   {% if g.user %}
     <a class="action" href="{{ url_for('task.index') }}">Back to Tasks</a>
   {% endif %}
@@ -9,6 +9,6 @@
 
 {% block content %}
     {% if g.user['id'] == task['user_id'] %}
-        <h2>Task Data</h2>
+        
     {% endif %}
 {% endblock %}

@@ -1,23 +1,32 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Tasks{% endblock %}</h1>
+  <h1>{% block title %}Today{% endblock %}</h1>
   {% if g.user %}
     <a class="action" href="{{ url_for('task.create') }}">New</a>
   {% endif %}
 {% endblock %}
 
 {% block content %}
+  <h1>Current Task:</h1>
+  <h1>Remaining Tasks:</h1>
   {% for task in tasks %}
     <article class="blog">
       <header>
         <div>
           <h1>{{ task['name'] }}</h1>
-          <div class="about">Created on {{ task['created'].strftime('%Y-%m-%d') }}></div>
+          <div class="about">{{ task['description'] }}</div>
         </div>
         {% if g.user['id'] == task['user_id'] %}
-          <a class="action" href="{{ url_for('task.update', id=task['id']) }}">Edit</a>
-          <a class="action" href="{{ url_for('task.details', id=task['id']) }}">Details</a>
+          <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
+            <input class="primary" type="submit" value="Edit">
+          </form>
+          <form action="{{ url_for('task.details', id=task['id']) }}" method="get">
+            <input class="primary" type="submit" value="Details">
+          </form>
+          <form action="{{ url_for('task.delete', id=task['id']) }}" method="post">
+            <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+          </form>
         {% endif %}
       </header>
     </article>
