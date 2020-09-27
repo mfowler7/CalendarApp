@@ -1,14 +1,20 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Task Data{% endblock %}</h1>
+  <h1>{% block title %}{{ task['name'] }}{% endblock %}</h1>
   {% if g.user %}
     <a class="action" href="{{ url_for('task.index') }}">Back to Tasks</a>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-    {% if g.user['id'] == task['user_id'] %}
+  <div>
+    <div class="about">Description: {{ task['description'] }}</div>
+    <div class="about">Date Created: {{ task['created'] }}</div>
+    <div class="about">Date Scheduled: {{ task['scheduled'] }}</div>
+    <div class="about">Priority: {{ task['priority'] }}</div>
+  </div>
+  {% if g.user['id'] == task['user_id'] %}
         
-    {% endif %}
+  {% endif %}
 {% endblock %}

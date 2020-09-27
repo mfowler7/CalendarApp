@@ -1,3 +1,4 @@
+import datetime
 from flask import Blueprint
 from flask import flash
 from flask import g
@@ -15,24 +16,8 @@ bp = Blueprint("task", __name__)
 
 @bp.route("/tasks")
 def index():
-    #d = date.today()
-    import datetime
-    today = datetime.datetime.now().strftime("%m-%d-%Y") + " 00:00:00"
-    tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
-    tomrrow_formatted = tomorrow.strftime("%m-%d-%Y") + " 11:59:59"
-
-    print(f"Tomorrow: {tomrrow_formatted}")
-
-    """Show all tasks for today"""
-    db = get_db()
-    tasks = db.execute(
-        "SELECT t.id, name, description, created, user_id, username"
-        " FROM task t JOIN user u ON t.user_id = u.id"
-        " WHERE created > '{}' AND created < '{}'".format(today, tomorrow)
-    ).fetchall()
-
+    tasks = get_todays_tasks()
     return render_template("task/index.html", tasks=tasks)
-
 
 def get_task(id, check_user=True):
     """Get a task and its user by id.
@@ -47,12 +32,11 @@ def get_task(id, check_user=True):
     task = (
         get_db()
         .execute(
-            "SELECT t.id, name, description, created, priority, user_id, username"
+            "SELECT t.id, name, description, created, scheduled, priority, user_id, username"
             " FROM task t JOIN user u ON t.user_id = u.id"
             " WHERE t.id = ?",
             (id,),
-        )
-        .fetchone()
+        ).fetchone()
     )
 
     if task is None:
@@ -63,6 +47,26 @@ def get_task(id, check_user=True):
 
     return task
 
+def get_todays_tasks():
+    today = datetime.datetime.now().strftime("%m-%d-%Y") + " 00:00:00"
+    tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+    tomorrow_formatted = tomorrow.strftime("%m-%d-%Y") + " 00:00:00"
+
+    print("Tomorrow: {}".format(tomorrow_formatted))
+
+    """Show all tasks for today"""
+    db = get_db()
+    tasks = db.execute(
+        "SELECT t.id, name, description, created, user_id, username"
+        " FROM task t JOIN user u ON t.user_id = u.id"
+        " WHERE scheduled >= '{}'".format(today)
+    ).fetchall()
+
+    return tasks
+
+def get_unplanned_tasks(id, check_user=True):
+    pass
+
 
 @bp.route("/task/create", methods=("GET", "POST"))
 @login_required
@@ -72,7 +76,10 @@ def create():
         name = request.form["name"]
         description = request.form["description"]
         priority = request.form["priority"]
+        scheduled = datetime.datetime.strptime(request.form["scheduled"], '%Y-%m-%d')
         error = None
+
+        print(f"Scheduled: {scheduled}")
 
         if not name:
             error = "Task name is required."
@@ -80,10 +87,11 @@ def create():
         if error is not None:
             flash(error)
         else:
+            print(f"Params: {name}, {description}, {g.user['id']}, {priority}")
             db = get_db()
             db.execute(
-                "INSERT INTO task (name, description, user_id, priority) VALUES (?, ?, ?, ?)",
-                (name, description, g.user["id"], priority),
+                "INSERT INTO task (name, description, user_id, priority, scheduled) VALUES (?, ?, ?, ?, ?)",
+                (name, description, g.user["id"], priority, scheduled,),
             )
             db.commit()
             
@@ -102,7 +110,10 @@ def update(id):
         name = request.form["name"]
         description = request.form["description"]
         priority = request.form["priority"]
+        scheduled = request.form["scheduled"]  + " 00:00:00"
         error = None
+
+        print("Scheduled: {}".format(scheduled))
 
         if not name:
             error = "Task name is required."
@@ -112,7 +123,7 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                "UPDATE task SET name = ?, description = ?, priority = ? WHERE id = ?", (name, description, priority, id)
+                "UPDATE task SET name = ?, description = ?, priority = ?, scheduled = ? WHERE id = ?", (name, description, priority, scheduled, id)
             )
             db.commit()
             return redirect(url_for("task.index"))

@@ -17,6 +17,8 @@
     <label for="medium">Medium</label><br>
     <input type="radio" name="priority" id="low" value="3">
     <label for="low">Low</label><br>
+    <label for="scheduled">Schedule for:</label>
+    <input type="date" id="scheduled" name="scheduled">
     <input type="submit" value="Save">
   </form>
   <form action="{{ url_for('task.index') }}" method="get">

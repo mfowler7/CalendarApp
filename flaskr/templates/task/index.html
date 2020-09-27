@@ -8,21 +8,20 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Current Task:</h1>
-  <h1>Remaining Tasks:</h1>
+  <h1>Current Task</h1>
+  <h1>Remaining Tasks</h1>
   {% for task in tasks %}
-    <article class="blog">
+    <article class="task">
       <header>
         <div>
           <h1>{{ task['name'] }}</h1>
-          <div class="about">{{ task['description'] }}</div>
         </div>
         {% if g.user['id'] == task['user_id'] %}
           <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
-            <input class="primary" type="submit" value="Edit">
+            <input type="submit" value="Edit">
           </form>
           <form action="{{ url_for('task.details', id=task['id']) }}" method="get">
-            <input class="primary" type="submit" value="Details">
+            <input type="submit" value="Details">
           </form>
           <form action="{{ url_for('task.delete', id=task['id']) }}" method="post">
             <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
