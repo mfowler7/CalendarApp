@@ -8,12 +8,12 @@
 {% endblock %}
 
 {% block content %}
-  <div>
+  <article class="task">
     <div class="about">Description: {{ task['description'] }}</div>
     <div class="about">Date Created: {{ task['created'] }}</div>
     <div class="about">Date Scheduled: {{ task['scheduled'] }}</div>
     <div class="about">Priority: {{ task['priority'] }}</div>
-  </div>
+  </article>
   {% if g.user['id'] == task['user_id'] %}
         
   {% endif %}
