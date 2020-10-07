@@ -16,19 +16,20 @@ bp = Blueprint("task", __name__)
 
 @bp.route("/tasks")
 def index():
+    tasks = get_all_tasks()
+    return render_template("task/index.html", tasks=tasks)
+
+@bp.route("/tasks/today")
+def today():
     tasks = get_todays_tasks()
     return render_template("task/index.html", tasks=tasks)
 
+@bp.route("/tasks/unplanned")
+def unplanned():
+    tasks = get_unplanned_tasks()
+    return render_template("task/index.html", tasks=tasks)
+
 def get_task(id, check_user=True):
-    """Get a task and its user by id.
-    Checks that the id exists and optionally that the current user is
-    the task owner.
-    :param id: id of task to get
-    :param check_user: require the current user to be the task owner
-    :return: the task with user information
-    :raise 404: if a task with the given id doesn't exist
-    :raise 403: if the current user isn't the task owner
-    """
     task = (
         get_db()
         .execute(
@@ -47,6 +48,29 @@ def get_task(id, check_user=True):
 
     return task
 
+def get_all_tasks():
+    tasks = (
+        get_db()
+        .execute(
+            "SELECT t.id, name, description, created, scheduled, priority, user_id, username"
+            " FROM task t JOIN user u ON t.user_id = u.id",
+        ).fetchall()
+    )
+
+    return tasks
+
+def get_unplanned_tasks():
+    unplanned_tasks = (
+        get_db()
+        .execute(
+            "SELECT t.id, name, description, created, scheduled, priority, user_id, username"
+            " FROM task t JOIN user u ON t.user_id = u.id"
+            " WHERE scheduled IS NULL",
+        ).fetchall()
+    )
+
+    return unplanned_tasks
+
 def get_todays_tasks():
     today = datetime.datetime.now().strftime("%m-%d-%Y") + " 00:00:00"
     tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
@@ -54,7 +78,6 @@ def get_todays_tasks():
 
     print("Tomorrow: {}".format(tomorrow_formatted))
 
-    """Show all tasks for today"""
     db = get_db()
     tasks = db.execute(
         "SELECT t.id, name, description, created, user_id, username"
@@ -64,10 +87,6 @@ def get_todays_tasks():
 
     return tasks
 
-def get_unplanned_tasks(id, check_user=True):
-    pass
-
-
 @bp.route("/task/create", methods=("GET", "POST"))
 @login_required
 def create():
@@ -76,10 +95,13 @@ def create():
         name = request.form["name"]
         description = request.form["description"]
         priority = request.form["priority"]
-        scheduled = datetime.datetime.strptime(request.form["scheduled"], '%Y-%m-%d')
-        error = None
 
-        print(f"Scheduled: {scheduled}")
+        if request.form["scheduled"] != '':
+            scheduled = datetime.datetime.strptime(request.form["scheduled"], '%Y-%m-%d')
+        else:
+            scheduled = None
+            
+        error = None
 
         if not name:
             error = "Task name is required."
@@ -87,13 +109,21 @@ def create():
         if error is not None:
             flash(error)
         else:
-            print(f"Params: {name}, {description}, {g.user['id']}, {priority}")
-            db = get_db()
-            db.execute(
-                "INSERT INTO task (name, description, user_id, priority, scheduled) VALUES (?, ?, ?, ?, ?)",
-                (name, description, g.user["id"], priority, scheduled,),
-            )
-            db.commit()
+            if scheduled != '':
+                db = get_db()
+                db.execute(
+                    "INSERT INTO task (name, description, user_id, priority, scheduled) VALUES (?, ?, ?, ?, ?)",
+                    (name, description, g.user["id"], priority, scheduled,),
+                )
+                db.commit()
+            else:
+                db = get_db()
+                db.execute(
+                    "INSERT INTO task (name, description, user_id, priority, scheduled) VALUES (?, ?, ?, ?)",
+                    (name, description, g.user["id"], priority,),
+                )
+                db.commit()
+
             
             return redirect(url_for("task.index"))
 
