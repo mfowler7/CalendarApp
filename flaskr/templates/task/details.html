@@ -9,10 +9,10 @@
 
 {% block content %}
   <article class="task">
-    <div class="about">Description: {{ task['description'] }}</div>
-    <div class="about">Date Created: {{ task['created'] }}</div>
-    <div class="about">Date Scheduled: {{ task['scheduled'] }}</div>
-    <div class="about">Priority: {{ task['priority'] }}</div>
+    <h3 class="about">Description: {{ task['description'] }}</h3>
+    <h3 class="about">Date Created: {{ task['created'] }}</h3>
+    <h3 class="about">Date Scheduled: {{ task['scheduled'] }}</h3>
+    <h3 class="about">Priority: {{ task['priority'] }}</h3>
   </article>
   {% if g.user['id'] == task['user_id'] %}
         

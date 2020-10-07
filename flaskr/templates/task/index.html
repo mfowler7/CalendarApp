@@ -1,14 +1,24 @@
 {% extends 'base.html' %}
 
+{% block title %}Task Viewer {% endblock %}
 {% block header %}
-  <h1>{% block title %}Today{% endblock %}</h1>
+    <a style="margin-bottom: 1%;">
+      <select style="flex: auto;" name="tasks" id="tasks">
+        <option value="today">Today's Tasks</option>
+        <option value="unplanned">Unplanned Tasks</option>
+        <option value="all">All Tasks</option>
+        <option value="high prio">High Prio Tasks</option>
+      </select>
+    </a>
   {% if g.user %}
-    <a class="action" href="{{ url_for('task.create') }}">New</a>
+    <a class="action" href="{{ url_for('task.create') }}">Add Task</a>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-  <h1>Remaining Tasks</h1>
+  <div>
+    <h1>Remaining Tasks</h1>
+  </div>
   {% for task in tasks %}
     <article class="task">
       <header>
