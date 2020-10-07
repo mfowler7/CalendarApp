@@ -73,16 +73,12 @@ def get_unplanned_tasks():
 
 def get_todays_tasks():
     today = datetime.datetime.now().strftime("%m-%d-%Y") + " 00:00:00"
-    tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
-    tomorrow_formatted = tomorrow.strftime("%m-%d-%Y") + " 00:00:00"
-
-    print("Tomorrow: {}".format(tomorrow_formatted))
 
     db = get_db()
     tasks = db.execute(
         "SELECT t.id, name, description, created, user_id, username"
         " FROM task t JOIN user u ON t.user_id = u.id"
-        " WHERE scheduled >= '{}'".format(today)
+        " WHERE scheduled IS NOT NULL AND scheduled >= '{}'".format(today)
     ).fetchall()
 
     return tasks
@@ -133,14 +129,18 @@ def create():
 @bp.route("/task/<int:id>/update", methods=("GET", "POST"))
 @login_required
 def update(id):
-    """Update a task if the current user is the task owner."""
     task = get_task(id)
 
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]
         priority = request.form["priority"]
-        scheduled = request.form["scheduled"]  + " 00:00:00"
+
+        if request.form["scheduled"] != '':
+            scheduled = request.form["scheduled"]  + " 00:00:00"
+        else:
+            scheduled = ""
+
         error = None
 
         print("Scheduled: {}".format(scheduled))
@@ -151,11 +151,20 @@ def update(id):
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute(
-                "UPDATE task SET name = ?, description = ?, priority = ?, scheduled = ? WHERE id = ?", (name, description, priority, scheduled, id)
-            )
-            db.commit()
+            if scheduled != '':
+                db = get_db()
+                db.execute(
+                    "UPDATE task SET name = ?, description = ?, priority = ?, scheduled = ? WHERE id = ?", (name, description, priority, scheduled, id)
+                )
+                db.commit()
+            else:
+                db = get_db()
+                db.execute(
+                    "UPDATE task SET name = ?, description = ?, priority = ?, scheduled = NULL WHERE id = ?", (name, description, priority, id)
+                )
+                db.commit()
+
+
             return redirect(url_for("task.index"))
 
     return render_template("task/update.html", task=task)
