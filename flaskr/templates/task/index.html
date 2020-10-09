@@ -27,7 +27,6 @@
           {% if g.user['id'] == task['user_id'] %}
             <div class="task-row">
               <h1 style="flex: auto;">{{ task['name'] }}</h1>
-              <div class="button-group">
                 <button class="task-button">
                   <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
                     <input style="border: none; background: white;" type="submit" value="Edit">
@@ -43,7 +42,6 @@
                     <input style="border: none; background: white;" class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
                   </form>
                 </button>
-              </div>
             </div>
           {% endif %}
         </header>

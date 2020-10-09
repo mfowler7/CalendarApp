@@ -6,22 +6,32 @@
 
 {% block content %}
   <form method="post">
+    <!-- Name and Descript Text Inputs -->
     <label for="name">Name</label>
     <input name="name" id="title" value="{{ request.form['name'] }}" required>
     <label for="description">Description</label>
     <textarea name="description" id="description">{{ request.form['description'] }}</textarea>
-    <label for ="priority">Priority</label>
-    <input type="radio" name="priority" id="high" value="1">
-    <label for="high">High</label><br>
-    <input type="radio" name="priority" id="medium" value="2">
-    <label for="medium">Medium</label><br>
-    <input type="radio" name="priority" id="low" value="3">
-    <label for="low">Low</label><br>
+    <!-- Priority Radio Buttons -->
+    <label for ="priority" style="margin-top: 1%;"">Priority</label>
+    <div style="margin-bottom: 1%;">
+      <input type="radio" name="priority" id="high" value="1">
+      <label for="high">High</label><br>
+      <input type="radio" name="priority" id="medium" value="2">
+      <label for="medium">Medium</label><br>
+      <input type="radio" name="priority" id="low" value="3">
+      <label for="low">Low</label><br>
+    </div>
+    <!-- Scheduled Date Picker -->
     <label for="scheduled">Schedule for:</label>
-    <input type="date" id="scheduled" name="scheduled">
+    <div>
+      <input type="date" id="scheduled" name="scheduled">
+    </div>
+  </form>
+  <!-- Save/Cancel Buttons -->
+  <div>
     <input type="submit" value="Save">
-  </form>
-  <form action="{{ url_for('task.index') }}" method="get">
-    <input class="primary" type="submit" value="Cancel" onclick="return confirm('Are you sure?');">
-  </form>
+    <form action="{{ url_for('task.index') }}" method="get">
+      <input class="primary" type="submit" value="Cancel" onclick="return confirm('Are you sure?');">
+    </form>
+  </div>
 {% endblock %}
