@@ -28,10 +28,10 @@
     </div>
   </form>
   <!-- Save/Cancel Buttons -->
-  <div>
-    <input type="submit" value="Save">
-    <form action="{{ url_for('task.index') }}" method="get">
-      <input class="primary" type="submit" value="Cancel" onclick="return confirm('Are you sure?');">
-    </form>
-  </div>
+  <form action="{{ url_for('task.index') }}" method="get">
+    <div>
+      <input type="submit" value="Cancel" onclick="return confirm('Are you sure?');">
+      <input type="submit" value="Save">
+    </div>
+  </form>
 {% endblock %}
