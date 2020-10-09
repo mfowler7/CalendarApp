@@ -16,38 +16,40 @@
 {% endblock %}
 
 {% block content %}
-  <div>
-    <h1>Remaining Tasks</h1>
-  </div>
-  {% for task in tasks %}
-    <article class="task">
-      <header>
-        {% if g.user['id'] == task['user_id'] %}
-          <div class="task-row" style="display: flex; ">
-            <h1 style="float: left;">{{ task['name'] }}</h1>
-            <div class="button-group" style="float: right;">
-              <button class="task-button">
-                <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
-                  <input style="border: none;" type="submit" value="Edit">
-                </form>
-              </button>
-              <button class="task-button">
-                <form action="{{ url_for('task.details', id=task['id']) }}" method="get">
-                  <input style="border: none;" type="submit" value="Details">
-                </form>
-              </button>           
-              <button class="task-button">
-                <form action="{{ url_for('task.delete', id=task['id']) }}" method="post">
-                  <input style="border: none; background: white;" class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-                </form>
-              </button>
+  {% if g.user %}
+    <div>
+      <h1>Remaining Tasks</h1>
+    </div>
+    {% for task in tasks %}
+      <article class="task">
+        <header>
+          {% if g.user['id'] == task['user_id'] %}
+            <div class="task-row" style="display: flex; ">
+              <h1 style="float: left;">{{ task['name'] }}</h1>
+              <div class="button-group" style="float: right;">
+                <button class="task-button">
+                  <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
+                    <input style="border: none;" type="submit" value="Edit">
+                  </form>
+                </button>
+                <button class="task-button">
+                  <form action="{{ url_for('task.details', id=task['id']) }}" method="get">
+                    <input style="border: none;" type="submit" value="Details">
+                  </form>
+                </button>           
+                <button class="task-button">
+                  <form action="{{ url_for('task.delete', id=task['id']) }}" method="post">
+                    <input style="border: none; background: white;" class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+                  </form>
+                </button>
+              </div>
             </div>
-          </div>
-        {% endif %}
-      </header>
-    </article>
-    {% if not loop.last %}
-      <hr>
-     {% endif %}
-  {% endfor %}
+          {% endif %}
+        </header>
+      </article>
+      {% if not loop.last %}
+        <hr>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 {% endblock %}

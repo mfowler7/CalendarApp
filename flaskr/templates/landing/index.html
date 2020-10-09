@@ -5,8 +5,10 @@
 {% endblock %}
 
 {% block content %}
-  <article class="task">
-    <a class="action" href="{{ url_for('task.index') }}">View All Tasks</a>
-  </article>
+  {% if g.user %}
+    <article class="task">
+      <a class="action" href="{{ url_for('task.index') }}">View All Tasks</a>
+    </article>
+  {% endif %}
 {% endblock %} -->
  
