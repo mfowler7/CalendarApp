@@ -113,6 +113,11 @@ section.content {
   border-radius: 10px;
   background: #0275D8;
   color: white;
+  align-items: center;
+}
+
+.task-row {
+  display: flex;
 }
 
 .task-button {
