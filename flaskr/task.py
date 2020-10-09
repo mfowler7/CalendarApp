@@ -16,18 +16,15 @@ bp = Blueprint("task", __name__)
 
 @bp.route("/tasks")
 def index():
+    print("In tasks method")
     tasks = get_all_tasks()
+
+    # tasks = get_todays_tasks()
+    # tasks = get_unplanned_tasks()
+
+    print(f"Length of tasks: {len(tasks)}")
     return render_template("task/index.html", tasks=tasks)
 
-@bp.route("/tasks/today")
-def today():
-    tasks = get_todays_tasks()
-    return render_template("task/index.html", tasks=tasks)
-
-@bp.route("/tasks/unplanned")
-def unplanned():
-    tasks = get_unplanned_tasks()
-    return render_template("task/index.html", tasks=tasks)
 
 def get_task(id, check_user=True):
     task = (

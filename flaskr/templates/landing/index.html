@@ -6,8 +6,14 @@
 
 {% block content %}
   {% if g.user %}
-    <article class="task">
-      <a class="action" href="{{ url_for('task.index') }}">View All Tasks</a>
+    <article style="margin-bottom: 1%;" class="task">
+      <a style="color: white;" class="action" href="{{ url_for('task.index') }}">Task View</a>
+    </article>
+    <article style="margin-bottom: 1%;" class="task">
+      <a style="color: white;" class="action" href="{{ url_for('task.index') }}">Weekly View</a>
+    </article>
+    <article style="margin-bottom: 1%;" class="task">
+      <a style="color: white;" class="action" href="{{ url_for('task.index') }}">Monthly View</a>
     </article>
   {% endif %}
 {% endblock %} -->

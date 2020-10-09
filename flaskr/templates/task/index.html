@@ -2,17 +2,20 @@
 
 {% block title %}Task Viewer {% endblock %}
 {% block header %}
-  <form action="{{ url_for('task.index') }}" method="get">
-      <select style="flex: auto; margin-bottom: 1%;" name="taskType" id="taskType">
-        <option value="today">Today's Tasks</option>
-        <option value="unplanned">Unplanned Tasks</option>
-        <option value="all">All Tasks</option>
-        <option value="highPrio">High Prio Tasks</option>
-      </select>
-      <input type="submit" value="Filter Tasks">
-  </form>
   {% if g.user %}
-    <a class="action" href="{{ url_for('task.create') }}">Add Task</a>
+    <div style="display: flex;">
+      <form style="flex: auto;" action="{{ url_for('task.index') }}" method="get">
+        <select style="padding: 3%;" name="taskType" id="taskType">
+          <option value="today">Today's Tasks</option>
+          <option value="unplanned">Unplanned Tasks</option>
+          <option value="all">All Tasks</option>
+          <option value="highPrio">High Prio Tasks</option>
+        </select>
+        <input type="submit" value="Filter Tasks">
+      </form>
+  
+      <a class="action" href="{{ url_for('task.create') }}">Add Task</a>
+    </div>
   {% endif %}
 {% endblock %}
 
@@ -26,7 +29,7 @@
         <header>
           {% if g.user['id'] == task['user_id'] %}
             <div class="task-row">
-              <h1 style="flex: auto;">{{ task['name'] }}</h1>
+              <p style="flex: auto;">{{ task['name'] }}</p>
                 <button class="task-button">
                   <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
                     <input style="border: none; background: white;" type="submit" value="Edit">
@@ -37,11 +40,15 @@
                     <input style="border: none; background: white;" type="submit" value="Details">
                   </form>
                 </button>           
-                <button class="task-button">
+                <!-- <button class="task-button"> -->
+                
                   <form action="{{ url_for('task.delete', id=task['id']) }}" method="post">
-                    <input style="border: none; background: white;" class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+                    <button class="task-button danger" type="submit">
+                      Delete
+                    </button>
+                    <!-- <input style="border: none; background: white;" class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');"> -->
                   </form>
-                </button>
+                <!-- </button> -->
             </div>
           {% endif %}
         </header>
