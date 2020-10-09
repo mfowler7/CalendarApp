@@ -2,14 +2,15 @@
 
 {% block title %}Task Viewer {% endblock %}
 {% block header %}
-    <a style="margin-bottom: 1%;">
-      <select style="flex: auto;" name="tasks" id="tasks">
+  <form action="{{ url_for('task.index') }}" method="get">
+      <select style="flex: auto; margin-bottom: 1%;" name="taskType" id="taskType">
         <option value="today">Today's Tasks</option>
         <option value="unplanned">Unplanned Tasks</option>
         <option value="all">All Tasks</option>
-        <option value="high prio">High Prio Tasks</option>
+        <option value="highPrio">High Prio Tasks</option>
       </select>
-    </a>
+      <input type="submit" value="Filter Tasks">
+  </form>
   {% if g.user %}
     <a class="action" href="{{ url_for('task.create') }}">Add Task</a>
   {% endif %}
@@ -26,15 +27,15 @@
           {% if g.user['id'] == task['user_id'] %}
             <div class="task-row" style="display: flex; ">
               <h1 style="float: left;">{{ task['name'] }}</h1>
-              <div class="button-group" style="float: right;">
+              <div class="button-group">
                 <button class="task-button">
                   <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
-                    <input style="border: none;" type="submit" value="Edit">
+                    <input style="border: none; background: white;" type="submit" value="Edit">
                   </form>
                 </button>
                 <button class="task-button">
                   <form action="{{ url_for('task.details', id=task['id']) }}" method="get">
-                    <input style="border: none;" type="submit" value="Details">
+                    <input style="border: none; background: white;" type="submit" value="Details">
                   </form>
                 </button>           
                 <button class="task-button">
