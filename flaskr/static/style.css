@@ -109,11 +109,15 @@ section.content {
 }
 
 .task {
-  padding: 2%;
-  margin: 2%;
+  padding: 1%;
   border-radius: 10px;
   background: #0275D8;
   color: white;
+}
+
+.task-button {
+  border-radius: 10px;
+  background: white;
 }
 
 a.action {
@@ -122,9 +126,4 @@ a.action {
 
 input.danger {
   color: #D9534F;
-}
-
-input[type=submit] {
-  align-self: start;
-  min-width: 10em;
 }

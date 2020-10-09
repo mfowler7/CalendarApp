@@ -22,19 +22,27 @@
   {% for task in tasks %}
     <article class="task">
       <header>
-        <div>
-          <h1>{{ task['name'] }}</h1>
-        </div>
         {% if g.user['id'] == task['user_id'] %}
-          <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
-            <input type="submit" value="Edit">
-          </form>
-          <form action="{{ url_for('task.details', id=task['id']) }}" method="get">
-            <input type="submit" value="Details">
-          </form>
-          <form action="{{ url_for('task.delete', id=task['id']) }}" method="post">
-            <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-          </form>
+          <div class="task-row" style="display: flex; ">
+            <h1 style="float: left;">{{ task['name'] }}</h1>
+            <div class="button-group" style="float: right;">
+              <button class="task-button">
+                <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
+                  <input style="border: none;" type="submit" value="Edit">
+                </form>
+              </button>
+              <button class="task-button">
+                <form action="{{ url_for('task.details', id=task['id']) }}" method="get">
+                  <input style="border: none;" type="submit" value="Details">
+                </form>
+              </button>           
+              <button class="task-button">
+                <form action="{{ url_for('task.delete', id=task['id']) }}" method="post">
+                  <input style="border: none; background: white;" class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+                </form>
+              </button>
+            </div>
+          </div>
         {% endif %}
       </header>
     </article>
