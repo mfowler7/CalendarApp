@@ -31,15 +31,15 @@
           {% if g.user['id'] == task['user_id'] %}
             <div class="task-row">
               <p style="flex: auto;">{{ task['name'] }}</p>
-                <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
-                  <button class="task-button" type="submit">Update</button>
-                </form>
-                <form action="{{ url_for('task.details', id=task['id']) }}" method="get">
-                  <button class="task-button" type="submit">Details</button>
-                </form>         
-                <form action="{{ url_for('task.delete', id=task['id']) }}" method="post">
-                  <button class="task-button danger" type="submit">Delete</button>
-                </form>
+              <form action="{{ url_for('task.update', id=task['id']) }}" method="get">
+                <button class="task-button" type="submit">Update</button>
+              </form>
+              <form action="{{ url_for('task.details', id=task['id']) }}" method="get">
+                <button class="task-button" type="submit">Details</button>
+              </form>         
+              <form action="{{ url_for('task.delete', id=task['id']) }}" method="post">
+                <button class="task-button danger" type="submit">Delete</button>
+              </form>
             </div>
           {% endif %}
         </header>

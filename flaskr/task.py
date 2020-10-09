@@ -1,5 +1,5 @@
 import datetime
-import repositories.task_repository as task_repo
+import flaskr.repositories.task_repository as task_repo
 
 from flask import Blueprint
 from flask import flash
@@ -19,7 +19,7 @@ bp = Blueprint("task", __name__)
 @bp.route("/tasks")
 def index():
     print("In tasks method")
-    tasks = get_all_tasks()
+    tasks = task_repo.get_all_tasks()
 
     # switch (taskType) {
     #     case "all":
