@@ -1,4 +1,6 @@
 import datetime
+import repositories.task_repository as task_repo
+
 from flask import Blueprint
 from flask import flash
 from flask import g
@@ -19,66 +21,31 @@ def index():
     print("In tasks method")
     tasks = get_all_tasks()
 
-    # tasks = get_todays_tasks()
-    # tasks = get_unplanned_tasks()
+    # switch (taskType) {
+    #     case "all":
+    #         tasks = get_all_tasks()
+    #     case "today":
+    #         tasks = get_todays_tasks()
+    #     case "unplanned":
+    #         tasks = get_unplanned_tasks()
+    #     default:
+    #         tasks = get_all_tasks() 
+    # }
 
     print(f"Length of tasks: {len(tasks)}")
     return render_template("task/index.html", tasks=tasks)
 
 
 def get_task(id, check_user=True):
-    task = (
-        get_db()
-        .execute(
-            "SELECT t.id, name, description, created, scheduled, priority, user_id, username"
-            " FROM task t JOIN user u ON t.user_id = u.id"
-            " WHERE t.id = ?",
-            (id,),
-        ).fetchone()
-    )
+    task = task_repo.get_task(id)
 
     if task is None:
         abort(404, "Task id {0} doesn't exist.".format(id))
-
     if check_user and task["user_id"] != g.user["id"]:
         abort(403)
 
     return task
 
-def get_all_tasks():
-    tasks = (
-        get_db()
-        .execute(
-            "SELECT t.id, name, description, created, scheduled, priority, user_id, username"
-            " FROM task t JOIN user u ON t.user_id = u.id",
-        ).fetchall()
-    )
-
-    return tasks
-
-def get_unplanned_tasks():
-    unplanned_tasks = (
-        get_db()
-        .execute(
-            "SELECT t.id, name, description, created, scheduled, priority, user_id, username"
-            " FROM task t JOIN user u ON t.user_id = u.id"
-            " WHERE scheduled IS NULL",
-        ).fetchall()
-    )
-
-    return unplanned_tasks
-
-def get_todays_tasks():
-    today = datetime.datetime.now().strftime("%m-%d-%Y") + " 00:00:00"
-
-    db = get_db()
-    tasks = db.execute(
-        "SELECT t.id, name, description, created, user_id, username"
-        " FROM task t JOIN user u ON t.user_id = u.id"
-        " WHERE scheduled IS NOT NULL AND scheduled >= '{}'".format(today)
-    ).fetchall()
-
-    return tasks
 
 @bp.route("/task/create", methods=("GET", "POST"))
 @login_required
@@ -140,8 +107,6 @@ def update(id):
 
         error = None
 
-        print("Scheduled: {}".format(scheduled))
-
         if not name:
             error = "Task name is required."
 
@@ -161,7 +126,6 @@ def update(id):
                 )
                 db.commit()
 
-
             return redirect(url_for("task.index"))
 
     return render_template("task/update.html", task=task)
@@ -170,21 +134,15 @@ def update(id):
 @bp.route("/task/<int:id>/delete", methods=("POST",))
 @login_required
 def delete(id):
-    """Delete a task.
-    Ensures that the task exists and that the logged in user is the
-    owner of the task.
-    """
-    get_task(id)
     db = get_db()
     db.execute("DELETE FROM task WHERE id = ?", (id,))
     db.commit()
     
     return redirect(url_for("task.index"))
 
+# TODO: Remove this, make it a dropdown on the main task
 @bp.route("/task/<int:id>/details", methods=("GET",))
 @login_required
 def details(id):
-    """ Display all the data associated with the task """
     task = get_task(id)
-
     return render_template("task/details.html", task=task)
