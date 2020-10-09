@@ -1,5 +1,23 @@
 from flaskr.db import get_db
 
+
+# Create Methods
+def create(name, desc, prio, scheduled):
+    if scheduled:
+        # Is a date, leave it
+        scheduled = datetime.datetime.strptime(request.form["scheduled"], '%Y-%m-%d')
+    else:
+        scheduled = None
+
+    db = get_db()
+    db.execute(
+        "INSERT INTO task (name, description, user_id, priority, scheduled) VALUES (?, ?, ?, ?, ?)",
+        (name, description, g.user["id"], priority, scheduled,),
+    )
+    db.commit()
+
+
+# Read Methods
 def get_task(id):
     task = (
         get_db()
@@ -47,3 +65,19 @@ def get_todays_tasks():
     ).fetchall()
 
     return tasks
+
+
+# Update Methods
+def update(name, desc, prio, scheduled):
+    db = get_db()
+    db.execute(
+        "UPDATE task SET name = ?, description = ?, priority = ?, scheduled = ? WHERE id = ?", (name, description, priority, scheduled, id)
+    )
+    db.commit()
+
+
+# Delete Methods
+def delete(id):
+    db = get_db()
+    db.execute("DELETE FROM task WHERE id = ?", (id,))
+    db.commit()
