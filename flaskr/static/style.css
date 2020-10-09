@@ -121,6 +121,15 @@ section.content {
   background: white;
 }
 
+/* Buttons */
+.blue-button {
+  padding: 1%;
+  color: white;
+  background: #0275D8;
+  border-radius: 10px;
+  border-color: white;
+}
+
 a.action {
   color: black;
 }
