@@ -1,3 +1,6 @@
+import datetime
+
+from flask import g
 from flaskr.db import get_db
 
 
@@ -5,14 +8,14 @@ from flaskr.db import get_db
 def create(name, desc, prio, scheduled):
     if scheduled:
         # Is a date, leave it
-        scheduled = datetime.datetime.strptime(request.form["scheduled"], '%Y-%m-%d')
+        scheduled = datetime.datetime.strptime(scheduled, '%Y-%m-%d')
     else:
         scheduled = None
 
     db = get_db()
     db.execute(
         "INSERT INTO task (name, description, user_id, priority, scheduled) VALUES (?, ?, ?, ?, ?)",
-        (name, description, g.user["id"], priority, scheduled,),
+        (name, desc, g.user["id"], prio, scheduled,),
     )
     db.commit()
 
